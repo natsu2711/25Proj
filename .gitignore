@@ -1,0 +1,11 @@
+/dist
+/node_modules
+
+logs
+*.log
+nmp-debug.log*
+
+.DS_Store
+
+.vscode/*
+!.vscode/settings.json
