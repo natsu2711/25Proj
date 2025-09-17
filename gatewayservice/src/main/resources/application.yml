@@ -1,0 +1,32 @@
+# 文件路径: gateway-service/src/main/resources/application.yml
+server:
+  port: 8080 # 网关通常占用80或8080端口
+
+spring:
+  application:
+    name: gatewayservice
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 开启从Nacos动态创建路由的功能
+      routes:
+        # 配置路由规则
+        - id: user_route # 路由ID，唯一即可
+          uri: lb://userservice # 路由到user-service服务，lb代表负载均衡
+          predicates:
+            - Path=/api/user/** # 断言：当请求路径匹配此模式时，应用此路由
+          filters:
+            # 过滤器：将请求路径中的/api/user/去掉，再转发给后端服务
+            - StripPrefix=2
+        
+        - id: order_route
+          uri: lb://orderservice
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - StripPrefix=2
+

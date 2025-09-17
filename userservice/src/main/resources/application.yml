@@ -1,0 +1,29 @@
+# 服务端口号
+server:
+  port: 8081
+
+spring:
+  # 应用名称，必须指定，用于服务注册
+  application:
+    name: userservice
+  
+  # Spring Cloud相关配置
+  cloud:
+    nacos:
+      discovery:
+        # Nacos服务器的地址和端口
+        server-addr: 127.0.0.1:8848  # 注意: 之前文档可能是8848，请根据你Nacos的实际端口修改
+
+  # ===================== 这是解决问题的核心配置 =====================
+  # 数据源（数据库连接）配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce_user?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root  # !!! 请将这里替换成你自己的MySQL root密码 !!!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # ================================================================
+
+# MyBatis-Plus的配置
+mybatis-plus:
+  # 告诉MyBatis-Plus，存放SQL语句的XML文件在哪里
+  mapper-locations: classpath:/mapper/*.xml
