@@ -1,4 +1,7 @@
 # 文件路径: gateway-service/src/main/resources/application.yml
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
 server:
   port: 8080 # 网关通常占用80或8080端口
 
@@ -21,12 +24,12 @@ spring:
             - Path=/api/user/** # 断言：当请求路径匹配此模式时，应用此路由
           filters:
             # 过滤器：将请求路径中的/api/user/去掉，再转发给后端服务
-            - StripPrefix=2
+            - StripPrefix=1
         
         - id: order_route
           uri: lb://orderservice
           predicates:
             - Path=/api/order/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
 
