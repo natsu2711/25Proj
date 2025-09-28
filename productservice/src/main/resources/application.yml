@@ -1,9 +1,9 @@
 
 spring:
   application:
-    name: gatewayservice # 服务名必须与Nacos中的配置名对应
+    name: productservice # 服务名必须与Nacos中的配置名对应
   config: 
-    import: nacos:gatewayservice.yml?refreshEnabled=true
+    import: nacos:productservice.yml?refreshEnabled=true
 
   cloud:
     nacos:

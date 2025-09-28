@@ -1,20 +1,18 @@
-package com.example.orderservice;
+package com.example.productservice;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients  //开启Feign功能
-@MapperScan("com.example.orderservice.mapper")
-public class OrderserviceApplication {
+@MapperScan("com.example.productservice.mapper") // 2. 添加这一行
+public class ProductserviceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(OrderserviceApplication.class, args);
+		SpringApplication.run(ProductserviceApplication.class, args);
 	}
 
 }

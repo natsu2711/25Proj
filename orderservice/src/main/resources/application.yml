@@ -1,8 +1,13 @@
 server:
-  port: 8083
+  port: 8083 #订单服务端口
 spring:
   application:
     name: orderservice
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce_order?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
       discovery:
