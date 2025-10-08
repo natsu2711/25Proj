@@ -61,10 +61,16 @@
     		<groupId>com.alibaba.cloud</groupId>
     		<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 		</dependency>
-		
+		<!-- redis config -->
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<!-- JSON config -->
+		<dependency>
+    		<groupId>com.alibaba</groupId>
+    		<artifactId>fastjson</artifactId>
 		</dependency>
 
 		<dependency>
