@@ -19,10 +19,20 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/{product_id}")
+    @GetMapping("/{id}")
 
-    public Product findById(@PathVariable Long product_id){
-        return productService.getById(product_id); //假设service中已有此方法
+    public Product findById(@PathVariable Long id){
+
+        if(this.productService == null){
+            System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            System.err.println("--- FATAL: productService is NULL! Injection failed! ---");
+            return null;
+
+        }else{
+            System.out.println("--- LOG: productService is NOT NULL. Proceeding to call getById... ---");
+
+        }
+        return productService.getById(id); //假设service中已有此方法
     }
     
         

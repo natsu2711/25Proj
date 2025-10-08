@@ -12,7 +12,7 @@ import java.util.Date;
 public class Product {
     
     @TableId("product_id")
-    private Long productId;
+    private Long id;
     private String productNo;
     private BigDecimal price;
     private Long userId;
