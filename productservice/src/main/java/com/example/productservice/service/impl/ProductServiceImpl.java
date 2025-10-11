@@ -58,8 +58,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     
     @Override
     public Product getById(Long id) {
-        //1查询Redis缓存
+        
         String key = CACHE_PRODUCT_KEY_PREFIX + id;
+        //1查询Redis缓存
         String productJson = redisTemplate.opsForValue().get(key);
 
         // // 2a. 缓存命中，直接返回
@@ -81,12 +82,47 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             return JSON.parseObject(productJson,Product.class);
         }
 
-        //  2b.缓存未命中
-        System.out.println("--- LOG: Cache MISS. Querying database... ---");
-        //  3.查询数据库
-        Product product = baseMapper.selectById(id);
+        //  2b.缓存未命中//开始加锁
+        synchronized(id.toString().intern()){// 在分布式环境下应使用分布式锁，如Redisson
+            String threadName = Thread.currentThread().getName(); // 获取当前线程名
+            // 双重检查锁定 (Double-Checked Locking)
+            // 再次检查缓存，因为可能在你等待锁的时候，别的线程已经把缓存写好了,直接返回
 
-        // 4.数据库有数据
+            productJson = redisTemplate.opsForValue().get(key);
+            if(productJson != null){
+                // 在这里加入线程名日志
+                System.out.println(String.format("--- THREAD: %s --- LOG: Double-Checked HIT! Found cache after acquiring lock.", threadName));
+                if(productJson.isEmpty()){                  
+                    return null;
+                }
+                return JSON.parseObject(productJson,Product.class);
+
+            }
+            // 5. 缓存确实为空，现在可以安全地查询数据库了
+            // 在这里加入线程名日志
+            System.out.println(String.format("--- THREAD: %s --- LOG: Double-Checked Locking passed. DB query is necessary.", threadName));
+            System.out.println("--- LOG: Double-Checked Locking passed. DB query is necessary for ID: " + id + " ---");
+            Product product = super.getById(id);
+
+            //6. 根据数据库查询结果，进行缓存操作
+            if (product != null) {
+                // 6a. 数据库有数据，正常缓存
+                String jsonToCache=JSON.toJSONString(product);
+                // 这里可以加入随机过期时间，防止缓存雪崩
+                redisTemplate.opsForValue().set(key,jsonToCache,30,TimeUnit.MINUTES);               
+            }else{
+                // 6b. 数据库无数据，缓存“空对象”，防止缓存穿透
+                redisTemplate.opsForValue().set(key,"",5,TimeUnit.MINUTES);
+
+            }
+            //7. 返回从数据库中查出的结果
+            return product;
+        }//锁释放
+
+        
+        
+
+/*         // 4.数据库有数据
         if (product != null) {
             // 4a. 数据库有数据，正常缓存
             System.out.println("--- LOG: Database returned object: " + product);
@@ -115,7 +151,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
         
         // 5. 返回数据
-        return product;
+        return product; */
+
+
+
+
     }
 
 }
