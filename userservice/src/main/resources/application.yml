@@ -42,4 +42,4 @@ spring:
         #import: nacos:${spring.application.name}.yml
         #import: nacos:userservice.yml?refreshEnabled=true # 告诉Spring去Nacos加载Data ID为"userservice.yml"的配置
         #file-extension: yaml # 指定配置文件格式为yml
-
+        

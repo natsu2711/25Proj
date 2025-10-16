@@ -9,6 +9,10 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
+    alibaba:
+      seata:
+        tx-service-group: my_test_tx_group # 这里的名字必须和file.conf里的vgroupMapping后面的名字一样
+
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848

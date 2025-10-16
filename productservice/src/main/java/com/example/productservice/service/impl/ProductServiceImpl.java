@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 //import org.springframework.util.StringUtils;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -224,11 +224,44 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         // 5. 返回数据
         return product; */
 
+    }
+
+
+    @Override
+    @Transactional //开启本地事务，保证库存查询和更新的原子性
+    public void deductStock(Long productId,Integer quantity){
+        System.out.println("product-service: 开始扣减库存");
+
+        //1查询产品获取当前库存
+        Product product = baseMapper.selectById(productId);
+        if(product == null){
+            throw new RuntimeException("商品不存在！");
+
+        }
+
+        //2检查库存是否充足
+        if(product.getStock()<quantity){
+            throw new RuntimeException("商品库存不足！");
+        }
+
+        //3扣减库存
+        System.out.println("当前库存:" + product.getStock() + ",需要扣减：" + quantity );
+        product.setStock(product.getStock()-quantity);
+        baseMapper.updateById(product);
+        System.out.println("productservice:库存扣减成功");
+
+        //人为制造异常，用于测试回滚场景
+        /* if(true){
+            throw new RuntimeException("这是productservice人为制造的异常！");
+        }*/
+            
+        } 
+
 
 
 
     }
 
-}
+
 
 

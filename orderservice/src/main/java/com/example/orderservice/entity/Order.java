@@ -19,6 +19,10 @@ public class Order {
     private Integer status;
     private Date createTime;
     private Date updateTime;
+    
+    private Integer quantity; // 购买数量
+
+    
 }
     
 
