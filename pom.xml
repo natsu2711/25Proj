@@ -14,6 +14,7 @@
         <module>gatewayservice</module>
         <module>orderservice</module>
         <module>productservice</module>
+        <module>scoreservice</module>
 	</modules>
     
     
@@ -68,6 +69,8 @@
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
+
+           
 		    <!-- 引入本地缓存 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

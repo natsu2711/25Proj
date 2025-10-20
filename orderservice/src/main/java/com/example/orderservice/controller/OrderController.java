@@ -1,5 +1,7 @@
 package com.example.orderservice.controller;
 
+import com.example.orderservice.dto.OrderCreateDTO;
+import com.example.orderservice.dto.Result;
 import com.example.orderservice.entity.Order;
 //import com.example.orderservice.feign.UserClient;
 import com.example.orderservice.service.OrderService;
@@ -9,6 +11,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +24,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/create")
+    /* @GetMapping("/create")
     public String createOrder(){
         Order order =new Order();
         order.setProductId(1L);
@@ -34,9 +38,22 @@ public class OrderController {
         orderService.createOrder(order);// 调用service层进行创建
         return "订单创建成功";
 
-    }
+    } */
+   
     /* public Order createOrder(@RequestParam("userId") Long userId,@RequestParam("productId") Long productId){
         return orderService.createOrder(userId, productId);
     } */
+
+    //构建真实的创建订单接口
+    @PostMapping("/create")
+    public Result<Order> createOrder(@RequestBody OrderCreateDTO orderDto){
+        try{
+            Order newOrder = orderService.createOrder(orderDto);
+            return Result.success(newOrder);
+        }catch (Exception e){
+            //捕获业务异常，返回友好的错误信息
+            return Result.error(500, e.getMessage());
+        }
+    }
 
 }

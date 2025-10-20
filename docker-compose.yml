@@ -1,0 +1,23 @@
+version: '3.5'
+services:
+  rmqnamesrv:
+    image: apache/rocketmq:4.9.3
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    command: sh mqnamesrv
+  rmqbroker:
+    image: apache/rocketmq:4.9.3
+    container_name: rmqbroker
+    ports:
+      - 10911:10911
+      - 10909:10909
+    volumes:
+      - ./data/broker/logs:/home/rocketmq/logs
+      - ./data/broker/store:/home/rocketmq/store
+    environment:
+        NAMESRV_ADDR: "rmqnamesrv:9876"
+        ROCKETMQ_BROKER_IP1: 127.0.0.1 # 必须明确指定为你机器的IP地址
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.9.3/conf/broker.conf
+    depends_on:
+      - rmqnamesrv
