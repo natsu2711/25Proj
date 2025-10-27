@@ -3,7 +3,7 @@ spring:
   application:
     name: productservice # 服务名必须与Nacos中的配置名对应
   config: 
-    import: nacos:productservice.yml?refreshEnabled=true
+    import: optional:nacos:productservice.yml?refreshEnabled=true
 
   cloud:
     nacos:

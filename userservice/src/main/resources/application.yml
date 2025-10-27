@@ -33,13 +33,19 @@ spring:
   application:
     name: userservice # 服务名必须与Nacos中的配置名对应
   config: 
-    import: nacos:userservice.yml?refreshEnabled=true
+    import: optional:nacos:userservice.yml?refreshEnabled=true
+
 
   cloud:
     nacos:
       config:
         server-addr: 127.0.0.1:8848 # Nacos地址
+        file-extension: yml
         #import: nacos:${spring.application.name}.yml
         #import: nacos:userservice.yml?refreshEnabled=true # 告诉Spring去Nacos加载Data ID为"userservice.yml"的配置
         #file-extension: yaml # 指定配置文件格式为yml
         
+
+logging:
+  level:
+    com.alibaba.cloud.nacos: DEBUG

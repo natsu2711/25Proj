@@ -6,8 +6,11 @@ import java.util.Date;
 //import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.orderservice.dto.OrderCreateDTO;
 //import com.example.orderservice.dto.UserDTO;
@@ -33,6 +36,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper,Order> implements 
 
     @Autowired
     private ProductClient productClient; // 假设已创建Feign客户端
+
+    @Autowired
+    private StreamBridge streamBridge;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -92,9 +98,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper,Order> implements 
         log.info("order-service: 订单创建流程结束。");
         return order;
 
+    }
 
+    public void afterOrderCreate(Order order){
+        // 3. 核心事务成功后，发送异步消息
+        log.info("准备发送订单成功消息...");
+        // 将订单对象转为JSON字符串发送
+        String orderJson = JSON.toJSONString(order);
+        // 使用在配置中定义的绑定名 "orderSuccess-out-0"
+        boolean isSuccess = streamBridge.send("orderSuccess-out-0",MessageBuilder.withPayload(orderJson).build());
+        if(isSuccess){
+            log.info("订单成功消息发送成功！");
+            
+        }else{
+            log.error("订单成功消息发送失败！");
 
-
+        }
 
 
     }

@@ -6,19 +6,26 @@ import com.example.orderservice.entity.Order;
 //import com.example.orderservice.feign.UserClient;
 import com.example.orderservice.service.OrderService;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
+
+//import java.math.BigDecimal;
+//import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j; // <-- 确保导入了这个包
+
 
 @RestController
 @RequestMapping("/order")
+@Slf4j // <--- 在这里添加注解
 public class OrderController {
 
     @Autowired
@@ -54,6 +61,24 @@ public class OrderController {
             //捕获业务异常，返回友好的错误信息
             return Result.error(500, e.getMessage());
         }
+    }
+    
+    @RestController
+    public class TestController{
+        @Autowired
+        private StreamBridge streamBridge;
+        // 创建一个简单的GET接口，用于手动触发消息发送
+        @GetMapping("/test/send")
+        public String testSend(){
+            String message = "这是一条来自order-service的测试消息: " + System.currentTimeMillis();
+            log.info("准备手动发送测试消息: {}", message);
+            boolean isSuccess = streamBridge.send("orderSuccess-out-0", message);
+            log.info("手动发送结果: {}", isSuccess);
+            return "Message sent: " + isSuccess;
+
+
+        }
+
     }
 
 }

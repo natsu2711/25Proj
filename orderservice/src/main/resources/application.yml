@@ -16,3 +16,17 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    
+    stream:
+      rocketmq:
+        binder:
+          name-server: 127.0.0.1:9876
+      bindings:
+        orderSuccess-out-0:
+          destination: ORDER_SUCCESS_TOPIC
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings # 只暴露mappings端点
