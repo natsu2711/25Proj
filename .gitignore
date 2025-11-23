@@ -35,3 +35,5 @@ build/
 *.log
 .DS_Store
 data/broker/store/
+data/
+.env
