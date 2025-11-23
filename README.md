@@ -1,17 +1,3 @@
-当然，一份优秀的`README.md`是项目的门面，它应该像一本引人入胜的说明书，能让其他开发者（或者未来的你，甚至是面试官）在最短的时间内理解项目的价值、架构和如何运行它。
-
-这里为你提供一个专业的、结构化的`README.md`模板，它不仅包含了你项目当前的技术栈，还为你未来的高级功能（如Sentinel）预留了位置。你可以直接复制粘贴，并根据需要微调其中的描述。
-
----
-
-**使用方法：**
-1.  在你的项目根目录 `ecommerce` 下，创建一个名为 `README.md` 的文件。
-2.  将下面的全部内容复制粘贴到这个文件中。
-3.  保存文件，然后通过Git提交并推送到GitHub。
-
----
-
-```markdown
 # 微服务电商平台 (Microservices E-Commerce Platform)
 
 ![Java](https://img.shields.io/badge/Java-17-blue)
@@ -181,6 +167,3 @@ graph TD
 - [ ] **统一认证授权 (Spring Security OAuth2):** 集成OAuth2/JWT实现统一的用户认证和API权限控制。
 - [ ] **分布式日志 (ELK/EFK):** 搭建ELK或EFK平台，实现分布式日志的统一采集、查询和分析。
 - [ ] **自动化部署 (CI/CD):** 使用Jenkins、GitLab CI等工具，构建完整的自动化部署流水线。
-
----
-```
