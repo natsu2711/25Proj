@@ -38,58 +38,6 @@
 | **开发工具**     | Maven, Lombok, Git                 | 项目构建、代码简化与版本控制             |
 | **部署**         | Docker, Docker Compose             | 容器化部署与编排中间件                   |
 
-## 系统架构图
-
-```mermaid
-graph TD
-    subgraph "客户端 (Client)"
-        User[用户浏览器/APP]
-    end
-
-    subgraph "基础设施 (Infrastructure)"
-        Nacos((Nacos Server))
-        Seata((Seata Server))
-        RocketMQ((RocketMQ Broker))
-        Redis[(Redis)]
-        MySQL[(MySQL)]
-    end
-
-    subgraph "业务微服务 (Business Microservices)"
-        Gateway[API网关 (Gateway)]
-
-        UserService[用户服务 (User Service)]
-        ProductService[商品服务 (Product Service)]
-        OrderService[订单服务 (Order Service)]
-        ScoreService[积分服务 (Score Service)]
-    end
-
-    User --> Gateway
-
-    Gateway -- "路由" --> UserService
-    Gateway -- "路由" --> ProductService
-    Gateway -- "路由" --> OrderService
-
-    OrderService -- "Feign调用 (同步)" --> UserService
-    OrderService -- "Feign调用 (同步)" --> ProductService
-
-    OrderService -- "发布消息 (异步)" --> RocketMQ
-    RocketMQ -- "订阅消息 (异步)" --> ScoreService
-
-    UserService -- "读/写" --> MySQL
-    ProductService -- "读/写" --> MySQL
-    OrderService -- "读/写" --> MySQL
-    ProductService -- "缓存读/写" --> Redis
-
-    Gateway -- "注册/发现" --> Nacos
-    UserService -- "注册/发现" --> Nacos
-    ProductService -- "注册/发现" --> Nacos
-    OrderService -- "注册/发现" --> Nacos
-    ScoreService -- "注册/发现" --> Nacos
-
-    OrderService -- "分布式事务" --> Seata
-    ProductService -- "分布式事务" --> Seata
-
-```
 
 ## 快速开始
 
